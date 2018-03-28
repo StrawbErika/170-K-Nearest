@@ -1,19 +1,25 @@
 import java.io.*;
 import java.util.*;
+import java.lang.Math.*;
 
 public class Knearest {
 
-    public ArrayList<ArrayList<Double>> trainingData;
-    public ArrayList<ArrayList<Double>> answers;
-    public ArrayList<Double> x;
+    public ArrayList<Vectors> trainingData;
+    public ArrayList<Vectors> answers;
+    public Vectors x;
     public Integer k;
 
     public Knearest(){
         this.k = 0;
-        this.trainingData = new ArrayList<ArrayList<Double>>();
-        this.x = new ArrayList<Double>();
+        this.trainingData = new ArrayList<Vectors>();
+        this.x = new Vectors();
     }
 
+    public void computeDistance(Vectors b){
+      Double squareX = (x.x - b.x) * (x.x - b.x);
+      Double squareY = (x.y - b.y) * (x.y - b.y);
+      b.d = Math.sqrt(squareX + squareY);
+    }
     public void loadTrainingFile() {
         String filename = "training.txt";
         try{
@@ -28,11 +34,7 @@ public class Knearest {
             {
                 if(in > 1){
                     String[] values = line.split(" "); //stores all the words from the line in values
-                    ArrayList<Double> training = new ArrayList<Double>();
-                    for (String str : values) {
-                        input = Double.parseDouble(str);
-                        training.add(input);
-                    }
+                    Vectors training = new Vectors(Double.parseDouble(values[0]), Double.parseDouble(values[1]), Double.parseDouble(values[2]));
                     trainingData.add(training);
                 }else{
                   k = Integer.parseInt(line);
@@ -54,10 +56,8 @@ public class Knearest {
             Double input;
             while((line  = br.readLine()) != null){
               String[] values = line.split(" "); //stores all the words from the line in values
-              for (String str : values) {
-                  input = Double.parseDouble(str);
-                  x.add(input);
-              }
+              x.x = Double.parseDouble(values[0]);
+              x.y = Double.parseDouble(values[1]);
             }
 
             inData.close();
@@ -70,11 +70,11 @@ public class Knearest {
         String filename = "output.txt";
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
-            writer.write("Nearest Neighbors of (" + x.get(0) +  x.get(1)+ "):");
+            writer.write("Nearest Neighbors of (" + x.x +  x.y+ "):");
             for(int i = 0; i < answers.size(); i++){
-                writer.write("("+ answers.get(i).get(0)+","+ answers.get(i).get(2) +"),");
+                writer.write("("+ answers.get(i).x+","+ answers.get(i).y +"),");
             }
-            writer.write("Class of (" + x.get(0) + x.get(1)+ "):" + x.get(2));
+            writer.write("Class of (" + x.x + x.y+ "):" + x.c);
 
             writer.close();
         }
