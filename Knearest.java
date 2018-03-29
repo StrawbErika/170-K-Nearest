@@ -80,8 +80,7 @@ public class Knearest {
       Double squareY = (x.y - b.y) * (x.y - b.y);
       b.d = Math.sqrt(squareX + squareY);
     }
-    public void loadTrainingFile() {
-        String filename = "training.txt";
+    public void loadTrainingFile(String filename) {
         try{
             FileInputStream fstream = new FileInputStream(filename);
             DataInputStream inData = new DataInputStream(fstream);
@@ -108,6 +107,16 @@ public class Knearest {
             System.err.println("Error: " + e.getMessage());
         }
     }
+
+    public void getX(String line) {
+        Double input;
+
+        String[] values = line.split(" "); //stores all the words from the line in values
+        x.x = Double.parseDouble(values[0]);
+        x.y = Double.parseDouble(values[1]);
+        x.print();
+    }
+
 
     public void loadInputFile() {
         String filename = "input.txt";
