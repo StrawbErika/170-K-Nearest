@@ -104,15 +104,16 @@ public class UI {
           String data01= wordPanel.getText();
           pointPanel.setText(data01);
           nearest.getX(data01);
-          nearest.x.print();
           nearest.getAllDistance();
           nearest.getKNearest();
           nearest.getC();
           String classData = Integer.toString(nearest.x.c);
           classPanel.setText(classData);
-          graph.points.add(nearest.x);
           nearest.saveFile();
-          graph.repaint();
+          if(nearest.isTwo){
+            graph.points.add(nearest.x);
+            graph.repaint();
+          }
         }
       });
 

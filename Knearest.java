@@ -72,8 +72,15 @@ public class Knearest {
     }
 
     public void getAllDistance(){
-      for(int i = 0; i < trainingData.size(); i++){
-        computeDistance(trainingData.get(i));
+      if(isTwo){
+        for(int i = 0; i < trainingData.size(); i++){
+          computeDistance(trainingData.get(i));
+        }
+      }
+      else{
+        for(int i = 0; i < trainingData.size(); i++){
+          computeMoreDistance(trainingData.get(i));
+        }
       }
     }
 
@@ -106,19 +113,20 @@ public class Knearest {
                 if(in > 0){
                     String[] values = line.split(" "); //stores all the words from the line in values
                     if(values.length > 3){
+                      ArrayList<Double> l = new ArrayList<Double>();
+                      int c = 0;
                       for(int i = 0; i < values.length; i++){
-                        ArrayList<Double> l = new ArrayList<Double>();
-                        int c = 0;
-                        if(i == Integer.parseInt(values[values.length-1])){
+                        if(i == values.length-1){
                           c = Integer.parseInt(values[i]);
                         }
                         else{
                           l.add(Double.parseDouble(values[i]));
                         }
-                        Vectors training = new Vectors(l,c);
-                        trainingDataDuplicate.add(training);
-                        isTwo = false;
                       }
+                      Vectors training = new Vectors(l,c);
+                      trainingData.add(training);
+                      trainingDataDuplicate.add(training);
+                      isTwo = false;
                     }
                     else{
                       Vectors training = new Vectors(Double.parseDouble(values[0]), Double.parseDouble(values[1]), Integer.parseInt(values[2]));
@@ -163,8 +171,16 @@ public class Knearest {
 
             while((line  = br.readLine()) != null){
               String[] values = line.split(" "); //stores all the words from the line in values
-              x.x = Double.parseDouble(values[0]);
-              x.y = Double.parseDouble(values[1]);
+              ArrayList<Double> list = new ArrayList<Double>();
+              if(values.length > 2){
+                for(int i = 0; i < values.length; i++){
+                  x.list.add(Double.parseDouble(values[i]));
+                }
+              }
+              else{
+                x.x = Double.parseDouble(values[0]);
+                x.y = Double.parseDouble(values[1]);
+              }
             }
 
             inData.close();
@@ -177,12 +193,36 @@ public class Knearest {
         String filename = "output.txt";
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
-            writer.write("Nearest Neighbors of (" + x.x +","+  x.y+ "):");
-            for(int i = 0; i < answers.size(); i++){
+            if(isTwo){
+              writer.write("Nearest Neighbors of (" + x.x +","+  x.y+ "):");
+              for(int i = 0; i < answers.size(); i++){
                 writer.write("("+ answers.get(i).x+","+ answers.get(i).y +") ");
+              }
+              writer.write("\n");
+              writer.write("Class of (" + x.x +","+ x.y+ "):" + x.c);
             }
-            writer.write("\n");
-            writer.write("Class of (" + x.x +","+ x.y+ "):" + x.c);
+            else{
+              System.out.println("ANSWERS ");
+              writer.write("Nearest Neighbors of (");
+              for(int i = 0; i < x.list.size(); i++){
+                writer.write(x.list.get(i) +",");
+              }
+              writer.write("):");
+              for(int i = 0; i < answers.size(); i++){
+                writer.write("(");
+                for(int j = 0; j < answers.get(i).list.size(); j++){
+                  writer.write(answers.get(i).list.get(j)+",");
+                }
+                writer.write(") ");
+              }
+              writer.write("\n");
+              writer.write("Class of (");
+              for(int i = 0; i < x.list.size(); i++){
+                writer.write(x.list.get(i) +",");
+              }
+              writer.write("):" + x.c);
+
+            }
 
             writer.close();
         }
