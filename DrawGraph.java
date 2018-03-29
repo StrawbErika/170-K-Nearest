@@ -24,7 +24,7 @@ public class DrawGraph extends JPanel {
   private static final int Y_HATCH_CNT = 10;
   private List<Integer> scores;
 
-  public DrawGraph(ArrayList<Vectors> scores) {
+  public DrawGraph(List<Integer> scores) {
     this.scores = scores;
   }
 
@@ -39,8 +39,8 @@ public class DrawGraph extends JPanel {
 
     List<Point> graphPoints = new ArrayList<Point>();
     for (int i = 0; i < scores.size(); i++) {
-       int x1 = (int) ((MAX_SCORE - scores.get(i).x) * xScale + BORDER_GAP);
-       int y1 = (int) ((MAX_SCORE - scores.get(i).y) * yScale + BORDER_GAP);
+       int x1 = (int) ((scores.get(i)) * xScale + BORDER_GAP);
+       int y1 = (int) ((MAX_SCORE - scores.get(i)) * yScale + BORDER_GAP);
        graphPoints.add(new Point(x1, y1));
     }
 
