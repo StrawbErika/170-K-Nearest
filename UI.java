@@ -32,6 +32,10 @@ public class UI {
       JTextArea frequenciesSpam = new JTextArea();
       JButton information= new JButton("Select Training text");
 
+      Graph graph= new Graph();
+      graph.setPreferredSize(new Dimension(550,550));
+      graph.setBackground(Color.WHITE);
+
       information.addActionListener(new ActionListener(){
         public void actionPerformed(ActionEvent e){
           JFileChooser fileChooser = new JFileChooser();
@@ -40,6 +44,12 @@ public class UI {
             File selectedFile = fileChooser.getSelectedFile();
             System.out.println("Selected file: " + selectedFile.getAbsolutePath());
             nearest.loadTrainingFile(selectedFile.getAbsolutePath());
+            if(nearest.isTwo){
+              for(int i = 0; i < nearest.trainingData.size(); i++){
+                  graph.points.add(nearest.trainingData.get(i));
+              }
+              graph.repaint();
+            }
           }
           frame.requestFocus();
           }
@@ -47,12 +57,9 @@ public class UI {
 
       information.setPreferredSize(new Dimension(200,50));
 
-      JPanel wordFrequencySpamPanel= new JPanel();
-      wordFrequencySpamPanel.setPreferredSize(new Dimension(550,550));
-      wordFrequencySpamPanel.setBackground(Color.WHITE);
 
       tabPanel.add(information);
-      tabPanel.add(wordFrequencySpamPanel);
+      tabPanel.add(graph);
 
 
       contentPanel.setLayout(new CardLayout());
@@ -103,7 +110,9 @@ public class UI {
           nearest.getC();
           String classData = Integer.toString(nearest.x.c);
           classPanel.setText(classData);
+          graph.points.add(nearest.x);
           nearest.saveFile();
+          graph.repaint();
         }
       });
 

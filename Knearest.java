@@ -9,8 +9,10 @@ public class Knearest {
     public ArrayList<Vectors> answers;
     public Vectors x;
     public Integer k;
+    public Boolean isTwo;
 
     public Knearest(){
+        this.isTwo = true;
         this.k = 0;
         this.trainingData = new ArrayList<Vectors>();
         this.trainingDataDuplicate = new ArrayList<Vectors>();
@@ -80,6 +82,16 @@ public class Knearest {
       Double squareY = (x.y - b.y) * (x.y - b.y);
       b.d = Math.sqrt(squareX + squareY);
     }
+
+    public void computeMoreDistance(Vectors b){
+      for(int i = 0; i < b.list.size(); i+=2){
+          Double squareOne = (x.list.get(i) - b.list.get(i)) * (x.list.get(i) - b.list.get(i));
+          Double squareTwo = (x.list.get(i+1) - b.list.get(i+1)) * (x.list.get(i+1) - b.list.get(i+1));
+          b.d = Math.sqrt(squareOne + squareTwo) + b.d;
+      }
+    }
+
+
     public void loadTrainingFile(String filename) {
         try{
             FileInputStream fstream = new FileInputStream(filename);
@@ -93,9 +105,26 @@ public class Knearest {
             {
                 if(in > 0){
                     String[] values = line.split(" "); //stores all the words from the line in values
-                    Vectors training = new Vectors(Double.parseDouble(values[0]), Double.parseDouble(values[1]), Integer.parseInt(values[2]));
-                    trainingData.add(training);
-                    trainingDataDuplicate.add(training);
+                    if(values.length > 3){
+                      for(int i = 0; i < values.length; i++){
+                        ArrayList<Double> l = new ArrayList<Double>();
+                        int c = 0;
+                        if(i == Integer.parseInt(values[values.length-1])){
+                          c = Integer.parseInt(values[i]);
+                        }
+                        else{
+                          l.add(Double.parseDouble(values[i]));
+                        }
+                        Vectors training = new Vectors(l,c);
+                        trainingDataDuplicate.add(training);
+                        isTwo = false;
+                      }
+                    }
+                    else{
+                      Vectors training = new Vectors(Double.parseDouble(values[0]), Double.parseDouble(values[1]), Integer.parseInt(values[2]));
+                      trainingData.add(training);
+                      trainingDataDuplicate.add(training);
+                    }
                 }
                 else{
                   k = Integer.parseInt(line);
@@ -112,9 +141,14 @@ public class Knearest {
         Double input;
 
         String[] values = line.split(" "); //stores all the words from the line in values
-        x.x = Double.parseDouble(values[0]);
-        x.y = Double.parseDouble(values[1]);
-        x.print();
+        if(values.length > 2){
+          for(int i = 0; i < values.length; i++){
+            x.list.add(Double.parseDouble(values[i]));
+          }
+        }else{
+          x.x = Double.parseDouble(values[0]);
+          x.y = Double.parseDouble(values[1]);
+        }
     }
 
 
