@@ -4,8 +4,6 @@ import java.util.*;
 public class Main {
     public static void main(String[] args) {
         Knearest nearest = new Knearest();
-        nearest.loadInputFile();
-        nearest.loadTrainingFile();
-
+        UI ui = new UI();
     }
 }
